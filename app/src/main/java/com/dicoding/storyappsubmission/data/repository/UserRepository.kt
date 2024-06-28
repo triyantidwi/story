@@ -22,7 +22,6 @@ import com.dicoding.storyappsubmission.data.remote.retrofit.ApiConfig
 import com.dicoding.storyappsubmission.data.remote.retrofit.ApiService
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -79,7 +78,7 @@ class UserRepository(
         return apiService.getStoriesWithLocation()
     }
 
-     fun getStories(): LiveData<PagingData<ListStoryItem>> {
+    fun getStories(): LiveData<PagingData<ListStoryItem>> {
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
@@ -94,5 +93,18 @@ class UserRepository(
 
     suspend fun logout() {
         pref.logout()
+    }
+
+    companion object {
+        @Volatile
+        private var instance: UserRepository? = null
+        fun getInstance(
+            apiService: ApiService,
+            pref: UserPreference,
+            database: StoryDatabase
+        ): UserRepository =
+            instance ?: synchronized(this) {
+                instance ?: UserRepository(apiService, pref, database)
+            }.also { instance = it }
     }
 }

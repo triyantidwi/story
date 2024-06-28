@@ -51,15 +51,15 @@ private fun getImageUriForPreQ(context: Context): Uri {
 }
 
 fun uriToFile(imageUri: Uri, context: Context): File {
-    val File = createCustomTempFile(context)
+    val myFile = createCustomTempFile(context)
     val inputStream = context.contentResolver.openInputStream(imageUri) as InputStream
-    val outputStream = FileOutputStream(File)
+    val outputStream = FileOutputStream(myFile)
     val buffer = ByteArray(1024)
     var length: Int
     while (inputStream.read(buffer).also { length = it } > 0) outputStream.write(buffer, 0, length)
     outputStream.close()
     inputStream.close()
-    return File
+    return myFile
 }
 
 fun createCustomTempFile(context: Context): File {
@@ -74,16 +74,16 @@ fun File.reduceFileImage(): File {
     var streamLength: Int
     do {
         val bmpStream = ByteArrayOutputStream()
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
         val bmpPicByteArray = bmpStream.toByteArray()
         streamLength = bmpPicByteArray.size
         compressQuality -= 5
     } while (streamLength > MAXIMAL_SIZE)
-    bitmap?.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
+    bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
     return file
 }
 
-fun Bitmap.getRotatedBitmap(file: File): Bitmap? {
+fun Bitmap.getRotatedBitmap(file: File): Bitmap {
     val orientation = ExifInterface(file).getAttributeInt(
         ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED
     )
@@ -96,7 +96,7 @@ fun Bitmap.getRotatedBitmap(file: File): Bitmap? {
     }
 }
 
-fun rotateImage(source: Bitmap, angle: Float): Bitmap? {
+fun rotateImage(source: Bitmap, angle: Float): Bitmap {
     val matrix = Matrix()
     matrix.postRotate(angle)
     return Bitmap.createBitmap(
