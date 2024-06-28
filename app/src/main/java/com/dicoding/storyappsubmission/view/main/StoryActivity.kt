@@ -36,7 +36,7 @@ class StoryActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             } else {
-                viewModel.loadStories()
+                viewModel.getStories()
             }
         }
 
@@ -64,7 +64,7 @@ class StoryActivity : AppCompatActivity() {
             }
 
         )
-        viewModel.getStoryPagingData()?.observe(this) {
+        viewModel.getStories().observe(this) {
             storyAdapter.submitData(lifecycle, it)
         }
     }

@@ -10,7 +10,6 @@ import androidx.paging.liveData
 import com.dicoding.storyappsubmission.data.ResultState
 import com.dicoding.storyappsubmission.data.local.database.StoryDatabase
 import com.dicoding.storyappsubmission.data.local.database.StoryRemoteMediator
-import com.dicoding.storyappsubmission.data.local.paging.StoryPagingSource
 import com.dicoding.storyappsubmission.data.pref.UserModel
 import com.dicoding.storyappsubmission.data.pref.UserPreference
 import com.dicoding.storyappsubmission.data.remote.response.AddStoryResponse
@@ -23,6 +22,7 @@ import com.dicoding.storyappsubmission.data.remote.retrofit.ApiConfig
 import com.dicoding.storyappsubmission.data.remote.retrofit.ApiService
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -33,7 +33,7 @@ import java.io.File
 class UserRepository(
     private val apiService: ApiService,
     private val pref: UserPreference,
-    private val database: StoryDatabase,
+    private val database: StoryDatabase
 ) {
 
     suspend fun register(name: String, email: String, password: String): RegisterResponse {
@@ -79,7 +79,7 @@ class UserRepository(
         return apiService.getStoriesWithLocation()
     }
 
-    fun getStoriesPaging(): LiveData<PagingData<ListStoryItem>> {
+     fun getStories(): LiveData<PagingData<ListStoryItem>> {
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
@@ -87,7 +87,6 @@ class UserRepository(
             ),
             remoteMediator = StoryRemoteMediator(database, apiService),
             pagingSourceFactory = {
-                StoryPagingSource(apiService)
                 database.storyDao().getAllStory()
             }
         ).liveData

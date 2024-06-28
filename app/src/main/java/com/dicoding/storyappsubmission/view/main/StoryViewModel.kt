@@ -18,9 +18,6 @@ class StoryViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private var story: LiveData<PagingData<ListStoryItem>>? = null
-
-
     init {
         loadSession()
     }
@@ -29,39 +26,21 @@ class StoryViewModel(private val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             repository.getSession().collect { user ->
                 _userSession.value = user
-                if (user.token.isNotEmpty()) {
-                    loadStories()
-
-                }
             }
         }
     }
-
 
     fun getSession(): LiveData<UserModel> {
         return repository.getSession().asLiveData()
     }
 
+     fun getStories() : LiveData<PagingData<ListStoryItem>> =
+        repository.getStories().cachedIn(viewModelScope)
+
+
     fun logout() {
         viewModelScope.launch {
             repository.logout()
         }
-    }
-
-     fun loadStories() {
-        viewModelScope.launch {
-            try {
-                _isLoading.value = true
-                story = repository.getStoriesPaging().cachedIn(viewModelScope)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    fun getStoryPagingData(): LiveData<PagingData<ListStoryItem>>? {
-        return story
     }
 }

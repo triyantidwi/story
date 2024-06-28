@@ -11,7 +11,6 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import com.dicoding.storyappsubmission.R
 import com.dicoding.storyappsubmission.databinding.ActivityRegisterBinding
 import com.dicoding.storyappsubmission.view.ViewModelFactory
@@ -72,7 +71,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupAuthentication() {
-        viewModel.registerResult.observe(this, Observer { result ->
+        viewModel.registerResult.observe(this) { result ->
             result.onSuccess { message ->
                 Toast.makeText(this, "Registration $message", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, LoginActivity::class.java)
@@ -86,8 +85,7 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        })
-
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

@@ -5,7 +5,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class ApiConfig {
     companion object {
@@ -36,9 +35,6 @@ class ApiConfig {
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(authInterceptor)
-                .connectTimeout(30, TimeUnit.SECONDS)  // Increase connect timeout
-                .readTimeout(30, TimeUnit.SECONDS)     // Increase read timeout
-                .writeTimeout(30, TimeUnit.SECONDS)    // Increase write timeout
                 .build()
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://story-api.dicoding.dev/v1/")

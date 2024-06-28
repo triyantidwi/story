@@ -24,6 +24,7 @@ import com.dicoding.storyappsubmission.utils.reduceFileImage
 import com.dicoding.storyappsubmission.utils.uriToFile
 import com.dicoding.storyappsubmission.view.ViewModelFactory
 import com.dicoding.storyappsubmission.view.main.StoryActivity
+import java.io.FileNotFoundException
 
 class UploadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUploadBinding
@@ -119,32 +120,41 @@ class UploadActivity : AppCompatActivity() {
 
     private fun uploadImage() {
         currentImageUri?.let { uri ->
-            val imageFile = uriToFile(uri, this).reduceFileImage()
-            Log.d("Image File", "showImage: ${imageFile.path}")
-            val description = binding.edAddDescription.text.toString()
+            try {
+                val imageFile = uriToFile(uri, this).reduceFileImage()
+                Log.d("Image File", "showImage: ${imageFile.path}")
+                val description = binding.edAddDescription.text.toString().trim()
 
-            viewModel.addStory(imageFile, description).observe(this) { result ->
-                if (result != null) {
-                    when (result) {
-                        is ResultState.Loading -> {
-                            showLoading(true)
-                        }
+                if (imageFile.exists() && description.isNotEmpty()) {
+                    viewModel.addStory(imageFile, description).observe(this) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is ResultState.Loading -> {
+                                    showLoading(true)
+                                }
 
-                        is ResultState.Success -> {
-                            showToast(result.data.message)
-                            val intent = Intent(this, StoryActivity::class.java)
-                            intent.flags =
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            showLoading(false)
-                        }
+                                is ResultState.Success -> {
+                                    showToast(result.data.message)
+                                    val intent = Intent(this, StoryActivity::class.java)
+                                    intent.flags =
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                    showLoading(false)
+                                }
 
-                        is ResultState.Error -> {
-                            showToast(result.error)
-                            showLoading(false)
+                                is ResultState.Error -> {
+                                    showToast(result.error)
+                                    showLoading(false)
+                                }
+                            }
                         }
                     }
+                } else {
+                    showToast(getString(R.string.image_and_description_cannot_be_empty))
                 }
+            } catch (e: FileNotFoundException) {
+                Log.e("UploadImage", "File not found: ${e.message}")
+                showToast(getString(R.string.image_and_description_cannot_be_empty))
             }
         } ?: showToast(getString(R.string.image_tidak_boleh_kosong))
     }
