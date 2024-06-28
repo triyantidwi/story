@@ -34,8 +34,10 @@ class StoryViewModel(private val repository: UserRepository) : ViewModel() {
         return repository.getSession().asLiveData()
     }
 
-     fun getStories() : LiveData<PagingData<ListStoryItem>> =
-        repository.getStories().cachedIn(viewModelScope)
+     fun getStories() : LiveData<PagingData<ListStoryItem>> {
+         return  repository.getStories().cachedIn(viewModelScope)
+     }
+
 
 
     fun logout() {

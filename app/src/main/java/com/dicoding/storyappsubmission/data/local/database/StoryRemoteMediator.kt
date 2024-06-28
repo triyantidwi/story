@@ -5,6 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.dicoding.storyappsubmission.data.pref.UserPreference
 import com.dicoding.storyappsubmission.data.remote.response.ListStoryItem
 import com.dicoding.storyappsubmission.data.remote.retrofit.ApiService
 
@@ -49,7 +50,6 @@ class StoryRemoteMediator(
 
         try {
             val responseData = apiService.getStories(page, state.config.pageSize)
-
             val endOfPaginationReached = responseData.listStory.isEmpty()
 
             database.withTransaction {

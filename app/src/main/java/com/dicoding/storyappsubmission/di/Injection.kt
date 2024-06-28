@@ -7,6 +7,7 @@ import com.dicoding.storyappsubmission.data.pref.dataStore
 import com.dicoding.storyappsubmission.data.remote.retrofit.ApiConfig
 import com.dicoding.storyappsubmission.data.repository.UserRepository
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 
 object Injection {

@@ -11,7 +11,7 @@ class StoryPagingSource(private val apiService: ApiService) : PagingSource<Int, 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
         return try {
             val position = params.key ?: INITIAL_PAGE_INDEX
-            val responseData = apiService.getStories(position, params.loadSize).listStory
+            val responseData = apiService.getStories(position, params.loadSize, token).listStory
             val stories = responseData.map {
                 Story(
                     id = it.id,
