@@ -48,11 +48,6 @@ class UserRepository(
         pref.saveSession(user)
     }
 
-    suspend fun getStories(): StoryResponse {
-        return apiService.getStories()
-    }
-
-
     fun getSession(): Flow<UserModel> {
         return pref.getSession()
     }
@@ -93,6 +88,7 @@ class UserRepository(
             remoteMediator = StoryRemoteMediator(database, apiService),
             pagingSourceFactory = {
                 StoryPagingSource(apiService)
+                database.storyDao().getAllStory()
             }
         ).liveData
     }

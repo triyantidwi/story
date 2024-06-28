@@ -50,13 +50,9 @@ interface ApiService {
     ): StoryResponse
 
     @GET("stories")
-    suspend fun getStories(): StoryResponse
-
-    @GET("stories")
     suspend fun getPadingStories(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
     ): StoryResponse
-
 
 }

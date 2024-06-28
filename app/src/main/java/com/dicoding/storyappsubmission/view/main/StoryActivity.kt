@@ -40,8 +40,6 @@ class StoryActivity : AppCompatActivity() {
             }
         }
 
-
-
         viewModel.isLoading.observe(this) { isLoading ->
             showLoading(isLoading)
         }

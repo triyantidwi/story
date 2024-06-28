@@ -11,7 +11,6 @@ import com.dicoding.storyappsubmission.data.pref.UserModel
 import com.dicoding.storyappsubmission.data.remote.response.ListStoryItem
 import com.dicoding.storyappsubmission.data.repository.UserRepository
 import kotlinx.coroutines.launch
-
 class StoryViewModel(private val repository: UserRepository) : ViewModel() {
 
     private val _userSession = MutableLiveData<UserModel>()
@@ -49,7 +48,7 @@ class StoryViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun loadStories() {
+     fun loadStories() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
