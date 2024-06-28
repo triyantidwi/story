@@ -66,7 +66,7 @@ class StoryActivity : AppCompatActivity() {
             }
 
         )
-        viewModel.story.observe(this) {
+        viewModel.getStoryPagingData()?.observe(this) {
             storyAdapter.submitData(lifecycle, it)
         }
     }
