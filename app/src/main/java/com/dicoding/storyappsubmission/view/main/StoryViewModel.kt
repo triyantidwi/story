@@ -1,14 +1,12 @@
 package com.dicoding.storyappsubmission.view.main
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.bumptech.glide.Glide.init
 import com.dicoding.storyappsubmission.data.pref.UserModel
 import com.dicoding.storyappsubmission.data.remote.response.ListStoryItem
 import com.dicoding.storyappsubmission.data.repository.UserRepository
@@ -21,8 +19,7 @@ class StoryViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private var  story: LiveData<PagingData<ListStoryItem>>? = null
-
+    private var story: LiveData<PagingData<ListStoryItem>>? = null
 
 
     init {
